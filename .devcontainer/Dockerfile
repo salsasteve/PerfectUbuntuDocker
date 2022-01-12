@@ -1,5 +1,8 @@
 FROM ubuntu:latest
 
+# Configure apt
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && \
   apt-get install -y sudo \
   curl \
@@ -36,7 +39,7 @@ ENV TERM xterm
 # Set the default shell to bash rather than sh
 ENV SHELL /bin/zsh
 
- # run the installation script  
+# run the installation script
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
 # install powerlevel10k
@@ -46,6 +49,3 @@ RUN cd $HOME && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-p
 
 # zsh configuration
 ADD .zshrc $HOME
-
-
-
