@@ -14,10 +14,10 @@ RUN apt-get update && \
   software-properties-common \
   vim \
   fonts-powerline \
+  python3.8 \
+  python3-pip \
   # set up locale
   && locale-gen en_US.UTF-8
-
-RUN sudo add-apt-repository ppa:deadsnakes/ppa
 
 ENV USER_NAME salsasteve
 ENV USER_PASSWORD password
@@ -42,9 +42,6 @@ ENV TERM xterm
 # Set the default shell to bash rather than sh
 ENV SHELL /bin/zsh
 
-# Install Python
-RUN sudo apt install python3.8
-
 # installing NVM, Node LTS, NPM
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 16.13.2
@@ -60,7 +57,11 @@ RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | ba
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-# run the installation script  
+# confirm installation
+RUN node -v
+RUN npm -v
+
+# run the oh-my-zsh installation script
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
 # install powerlevel10k
@@ -68,5 +69,12 @@ RUN git clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/t
 
 RUN cd $HOME && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.purepower
 
+COPY . $HOME
+WORKDIR $HOME/app
+RUN pip3 install -r requirements.txt
+
 # zsh configuration
-ADD .zshrc $HOME
+COPY .zshrc $HOME
+COPY .p10k.zsh $home
+
+ENTRYPOINT [$SHELL , "echo", "BOOYAH"]
