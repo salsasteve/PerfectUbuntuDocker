@@ -1,7 +1,5 @@
 FROM ubuntu:latest
 
-# RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
 # Configure apt
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -47,12 +45,7 @@ ENV SHELL /bin/zsh
 # Install Python
 RUN sudo apt install python3.8
 
-# # Installing Node
-# SHELL ["/bin/bash", "--login", "-i", "-c"]
-# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-# RUN source /root/.bashrc && nvm install --lts
-# SHELL ["/bin/bash", "--login", "-c"]
-
+# installing NVM, Node LTS, NPM
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 16.13.2
 
