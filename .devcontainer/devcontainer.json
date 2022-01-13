@@ -1,5 +1,5 @@
 {
-	"name": "Ubuntu",
+	"name": "SimpleNFTProject",
 	"build": {
 		"dockerfile": "Dockerfile"
 	}
