@@ -1,5 +1,7 @@
 FROM ubuntu:latest
 
+# RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
 # Configure apt
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -11,10 +13,13 @@ RUN apt-get update && \
   locales \
   zsh \
   wget \
+  software-properties-common \
   vim \
   fonts-powerline \
   # set up locale
   && locale-gen en_US.UTF-8
+
+RUN sudo add-apt-repository ppa:deadsnakes/ppa
 
 ENV USER_NAME salsasteve
 ENV USER_PASSWORD password
@@ -39,7 +44,30 @@ ENV TERM xterm
 # Set the default shell to bash rather than sh
 ENV SHELL /bin/zsh
 
-# run the installation script
+# Install Python
+RUN sudo apt install python3.8
+
+# # Installing Node
+# SHELL ["/bin/bash", "--login", "-i", "-c"]
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+# RUN source /root/.bashrc && nvm install --lts
+# SHELL ["/bin/bash", "--login", "-c"]
+
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 16.13.2
+
+WORKDIR $NVM_DIR
+
+RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+# run the installation script  
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
 # install powerlevel10k
